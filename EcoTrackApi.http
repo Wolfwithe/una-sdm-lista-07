@@ -1,0 +1,36 @@
+@EcoTrackApi_HostAddress = https://localhost:7160
+@ContentType = application/json
+
+### Get all sustainability projects
+GET {{EcoTrackApi_HostAddress}}/api/sustentabilidade
+Accept: {{ContentType}}
+
+### Get project by ID
+GET {{EcoTrackApi_HostAddress}}/api/sustentabilidade/1
+Accept: {{ContentType}}
+
+### Create new project
+POST {{EcoTrackApi_HostAddress}}/api/sustentabilidade
+Content-Type: {{ContentType}}
+
+{
+  "nome": "Projeto Solar",
+  "descricao": "Implementação de painéis solares",
+  "categoria": "Energia Renovável",
+  "impactoAmbiental": 85.5
+}
+
+### Update project
+PUT {{EcoTrackApi_HostAddress}}/api/sustentabilidade/1
+Content-Type: {{ContentType}}
+
+{
+  "nome": "Projeto Solar Atualizado",
+  "descricao": "Implementação de painéis solares com baterias",
+  "categoria": "Energia Renovável",
+  "impactoAmbiental": 90.0
+}
+
+### Delete project
+DELETE {{EcoTrackApi_HostAddress}}/api/sustentabilidade/1
+Accept: {{ContentType}}
