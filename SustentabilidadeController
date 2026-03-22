@@ -1,0 +1,85 @@
+using EcoTrackApi.DTOs;
+using EcoTrackApi.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EcoTrackApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class SustentabilidadeController : ControllerBase
+    {
+        private readonly ISustentabilidadeService _service;
+
+        private static readonly string[] dicas = new[]
+        {
+            "Use transporte público sempre que possível.",
+            "Reduza o uso de plástico.",
+            "Economize água no dia a dia.",
+            "Prefira produtos recicláveis.",
+            "Desligue aparelhos que não estão em uso."
+        };
+
+        public SustentabilidadeController(ISustentabilidadeService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var projetos = await _service.GetAllAsync();
+            return Ok(projetos);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var projeto = await _service.GetByIdAsync(id);
+            if (projeto == null)
+                return NotFound();
+
+            return Ok(projeto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] ProjetoSustentabilidadeDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var created = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ProjetoSustentabilidadeDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var updated = await _service.UpdateAsync(id, dto);
+            if (updated == null)
+                return NotFound();
+
+            return Ok(updated);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var success = await _service.DeleteAsync(id);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpGet("dica")]
+        public IActionResult GetDica()
+        {
+            var random = new Random();
+            int index = random.Next(dicas.Length);
+            return Ok(dicas[index]);
+        }
+    }
+}
